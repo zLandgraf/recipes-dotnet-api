@@ -1,10 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System;
 
 namespace Recipes.Infra
 {
     public class RecipesContext : DbContext
     {
-        public RecipesContext(DbContextOptions<RecipesContext> options) : base (options)
+        public RecipesContext(DbContextOptions<RecipesContext> options) : base(options)
         {
         }
 
