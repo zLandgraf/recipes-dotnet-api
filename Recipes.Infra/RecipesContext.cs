@@ -1,17 +1,27 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System;
+using Microsoft.Extensions.Options;
+using MongoDB.Driver;
+using Recipes.Domain;
+using Recipes.Infra.MongoConfig;
 
 namespace Recipes.Infra
 {
-    public class RecipesContext : DbContext
+    public class RecipesContext 
     {
-        public RecipesContext(DbContextOptions<RecipesContext> options) : base(options)
+        private readonly IMongoDatabase _database;
+
+        public RecipesContext(IMongoDatabaseSettings settings)
         {
+            var client = new MongoClient(settings.ConnectionString);
+            _database =  client.GetDatabase(settings.DatabaseName);
         }
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        public IMongoCollection<Ingredient> Ingredient
         {
-            base.OnModelCreating(modelBuilder);
+            get
+            {
+                return _database.GetCollection<Ingredient>("Ingredient");
+            }
         }
     }
 }

@@ -5,8 +5,10 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using Recipes.Infra;
+using Recipes.Infra.MongoConfig;
 using System;
 using System.IO;
 using System.Reflection;
@@ -24,10 +26,10 @@ namespace Recipes
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContextPool<RecipesContext>(options =>
-            {
-                options.UseInMemoryDatabase("recipesDB");
-            });
+            services.Configure<MongoDatabaseSettings>(Configuration.GetSection(nameof(MongoDatabaseSettings)));
+            services.AddScoped<IMongoDatabaseSettings>(sp =>sp.GetRequiredService<IOptions<MongoDatabaseSettings>>().Value);
+            services.AddScoped<RecipesContext>();
+
             services.AddSwaggerGen(options =>
             {
                 options.SwaggerDoc("v1", new OpenApiInfo
