@@ -1,6 +1,7 @@
 using MediatR;
 using Recipes.Domain;
 using Recipes.Infra;
+using System.ComponentModel.DataAnnotations;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -8,6 +9,7 @@ namespace Recipes.Application.Ingredients.Commands
 {
     public class CreateIngredient : IRequest<Ingredient>
     {
+        [Required]
         public string Name { get; set; }
     }
 
