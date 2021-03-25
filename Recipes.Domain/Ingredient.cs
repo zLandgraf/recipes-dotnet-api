@@ -9,5 +9,12 @@ namespace Recipes.Domain
         [BsonRepresentation(BsonType.ObjectId)]
         public string Id { get; set; }
         public string Name { get; set; }
+        public Amount Amount { get; set; }
+    }
+
+    public class Amount 
+    {
+        public string Unit { get; set; } 
+        public decimal Value { get; set; }
     }
 }

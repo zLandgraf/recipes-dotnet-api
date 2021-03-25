@@ -1,12 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
-using MongoDB.Driver;
+﻿using MongoDB.Driver;
 using Recipes.Domain;
 using Recipes.Infra.MongoConfig;
 
 namespace Recipes.Infra
 {
-    public class RecipesContext 
+  public class RecipesContext 
     {
         private readonly IMongoDatabase _database;
 
@@ -23,5 +21,13 @@ namespace Recipes.Infra
                 return _database.GetCollection<Ingredient>("Ingredient");
             }
         }
+
+        // public IMongoCollection<Ingredient> Ingredient
+        // {
+        //     get
+        //     {
+        //         return _database.GetCollection<Ingredient>("Ingredient");
+        //     }
+        // }
     }
 }
