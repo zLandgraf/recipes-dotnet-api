@@ -30,6 +30,7 @@ namespace Recipes.Application.Recipes.Commands
     public class CreateRecipeHandler : IRequestHandler<CreateRecipe, Recipe>
     {
         private readonly RecipesContext _context;
+        
         public CreateRecipeHandler(RecipesContext context)
         {
             _context = context;
