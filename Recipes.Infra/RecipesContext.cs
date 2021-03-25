@@ -22,12 +22,12 @@ namespace Recipes.Infra
             }
         }
 
-        // public IMongoCollection<Ingredient> Ingredient
-        // {
-        //     get
-        //     {
-        //         return _database.GetCollection<Ingredient>("Ingredient");
-        //     }
-        // }
+        public IMongoCollection<Recipe> Recipe
+        {
+            get
+            {
+                return _database.GetCollection<Recipe>("Recipes");
+            }
+        }
     }
 }
