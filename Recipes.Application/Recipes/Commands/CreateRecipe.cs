@@ -49,6 +49,9 @@ namespace Recipes.Application.Recipes.Commands
                 
                 if(ingredient != null)
                 {
+                    ingredient.Amount = model.Amount;
+                    ingredient.Unit = model.Unit;
+                    
                     recipe.Ingredients.Add(ingredient);
                 }
             }
