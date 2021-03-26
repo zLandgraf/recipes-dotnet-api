@@ -16,20 +16,14 @@ namespace Recipes.Controllers
         private readonly IMediator _mediatr;
 
         public RecipeController(IMediator mediatr)
-        {
-            _mediatr = mediatr;
-        }
+            => _mediatr = mediatr;
 
         [HttpGet]
-        public async Task<IEnumerable<Recipe>> GetRecipes()
-        {
-            return await _mediatr.Send(new GetAllRecipes());
-        }
+        public async Task<IEnumerable<Recipe>> GetRecipes([FromQuery] GetAllRecipes query)
+            => await _mediatr.Send(query);
 
         [HttpPost]
         public async Task<Recipe> AddRecipe([FromBody] CreateRecipe command)
-        {
-            return await _mediatr.Send(command);
-        }
+            => await _mediatr.Send(command);
     }
 }

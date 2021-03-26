@@ -1,30 +1,46 @@
-﻿using MediatR;
+﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
+using MediatR;
 using MongoDB.Driver;
-using Recipes.Domain;
+using Recipes.Application.Common.Extensions;
+using Recipes.Application.Ingredients.TransferObjects;
 using Recipes.Infra;
-using Recipes.Infra.MongoConfig;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace Recipes.Application.Ingredients.Queries
 {
-    public class GetAllIngredients : IRequest<IEnumerable<Ingredient>>
+    public class GetAllIngredients : IRequest<IEnumerable<IngredientDTO>>
     {
+        public int PageNumber { get; set; } = 1;
+
+        [Range(0, 100)]
+        public int ItemsPerPage { get; set; } = 10;
     }
 
-    public class GetAllIngredientsHandler : IRequestHandler<GetAllIngredients, IEnumerable<Ingredient>>
+    public class GetAllIngredientsHandler : IRequestHandler<GetAllIngredients, IEnumerable<IngredientDTO>>
     {
         private readonly RecipesContext _context;
-        
-        public GetAllIngredientsHandler(RecipesContext context)
+        private readonly IMapper _mapper;
+
+        public GetAllIngredientsHandler(RecipesContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
-        public async Task<IEnumerable<Ingredient>> Handle(GetAllIngredients request, CancellationToken cancellationToken)
+        public async Task<IEnumerable<IngredientDTO>> Handle(GetAllIngredients request, CancellationToken cancellationToken)
         {
-            return await _context.Ingredient.Find(ingredient => true).ToListAsync();
+           var ingredients = await _context.Ingredient
+                 .Find(x => true)
+                 .ToPaginatedListAsync(request.PageNumber, request.ItemsPerPage);
+
+            return ingredients
+                .AsQueryable()
+                .ProjectTo<IngredientDTO>(_mapper.ConfigurationProvider);
         }
     }
 }

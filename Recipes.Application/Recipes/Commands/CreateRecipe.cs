@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
+using MongoDB.Driver;
 using Recipes.Domain;
 using Recipes.Infra;
 
@@ -13,12 +13,12 @@ namespace Recipes.Application.Recipes.Commands
     {
         [Required]
         public string Name { get; set; }
-        public IEnumerable<IngredientModel> Ingredients { get; set; }
+        public List<IngredientModel> Ingredients { get; set; }
         public class IngredientModel 
         {
             [Required]
-            public string Name { get; set; }
-            
+            public string Id { get; set; }
+
             [Required]
             public string Unit { get; set; }
 
@@ -43,14 +43,16 @@ namespace Recipes.Application.Recipes.Commands
                 Name = request.Name,
             };
 
-            var ingredients = request.Ingredients.ToList().Select(model => new Ingredient 
+            foreach (var model in request.Ingredients)
             {
-                Name  = model.Name,
-                Amount = model.Amount,
-                Unit = model.Unit,
-            });
+                var ingredient = await _context.Ingredient.Find(x => x.Id == model.Id).FirstOrDefaultAsync();
+                
+                if(ingredient != null)
+                {
+                    recipe.Ingredients.Add(ingredient);
+                }
+            }
 
-            recipe.Ingredients.AddRange(ingredients);
             await _context.Recipe.InsertOneAsync(recipe);
             return recipe;
         }
