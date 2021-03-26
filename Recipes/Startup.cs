@@ -26,6 +26,15 @@ namespace Recipes
 
         public void ConfigureServices(IServiceCollection services)
         {
+             services.AddCors(options =>
+            {
+                options.AddPolicy(name: "react-client",
+                builder =>
+                {
+                    builder.WithOrigins("http://localhost:3000");
+                });
+            });
+
             services.Configure<MongoDatabaseSettings>(Configuration.GetSection(nameof(MongoDatabaseSettings)));
             services.AddScoped<IMongoDatabaseSettings>(sp =>sp.GetRequiredService<IOptions<MongoDatabaseSettings>>().Value);
             services.AddScoped<RecipesContext>();
@@ -65,6 +74,8 @@ namespace Recipes
             });
 
             app.UseRouting();
+
+            app.UseCors("react-client");
 
             app.UseAuthorization();
 
