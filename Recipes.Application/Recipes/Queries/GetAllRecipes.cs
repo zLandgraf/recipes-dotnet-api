@@ -16,7 +16,7 @@ namespace Recipes.Application.Recipes.Queries
         public int PageNumber { get; set; } = 1;
 
         [Range(0, 100)]
-        public int ItemsPerPage { get; set; } = 10;
+        public int ItemsPerPage { get; set; } = 15;
     }
 
     public class GetAllRecipesHandler : IRequestHandler<GetAllRecipes, IEnumerable<Recipe>>
