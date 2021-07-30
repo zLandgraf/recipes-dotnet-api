@@ -14,9 +14,4 @@
     <ProjectReference Include="..\Recipes.Infra\Recipes.Infra.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Ingredients\" />
-    <Folder Include="Recipes\" />
-  </ItemGroup>
-
 </Project>
