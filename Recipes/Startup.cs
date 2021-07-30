@@ -5,10 +5,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using Recipes.Infra;
-using Recipes.Infra.MongoConfig;
 using System;
 using System.IO;
 using System.Reflection;
@@ -26,20 +24,20 @@ namespace Recipes
 
         public void ConfigureServices(IServiceCollection services)
         {
-             services.AddCors(options =>
-            {
+            services.AddCors(options =>
+            { 
                 options.AddPolicy(name: "react-client",
-                builder =>
-                {
-                    builder.WithOrigins("http://localhost:3000")
-                    .AllowAnyHeader()
-                    .AllowAnyMethod();
-                });
+                    builder =>
+                    {
+                        builder.WithOrigins("http://localhost:3000")
+                        .AllowAnyHeader()
+                        .AllowAnyMethod();
+                    });
             });
-
-            services.Configure<MongoDatabaseSettings>(Configuration.GetSection(nameof(MongoDatabaseSettings)));
-            services.AddScoped<IMongoDatabaseSettings>(sp =>sp.GetRequiredService<IOptions<MongoDatabaseSettings>>().Value);
-            services.AddScoped<RecipesContext>();
+            
+            services.AddDbContext<RecipesContext>(options => options.UseMySql(
+                Configuration.GetConnectionString("MySQLConnection"),
+                ServerVersion.AutoDetect(Configuration.GetConnectionString("MySQLConnection"))));
 
             services.AddSwaggerGen(options =>
             {

@@ -1,33 +1,35 @@
-﻿using MongoDB.Driver;
+﻿using Microsoft.EntityFrameworkCore;
 using Recipes.Domain;
-using Recipes.Infra.MongoConfig;
 
 namespace Recipes.Infra
 {
-  public class RecipesContext 
+    public class RecipesContext : DbContext
     {
-        private readonly IMongoDatabase _database;
+        public DbSet<Recipe> Recipe { get; set; }
+        public DbSet<Ingredient> Ingredient { get; set; }
+        public DbSet<RecipeIngredient> RecipeIngredient { get;  set; }
+        public DbSet<Planning> Planning { get; set; }
+        public DbSet<RecipePlanning> RecipePlanning { get; set; }
+        public DbSet<Meal> Meal { get; set; }
+        public DbSet<Unit> Unit { get; set; }
 
-        public RecipesContext(IMongoDatabaseSettings settings)
+        public RecipesContext(DbContextOptions<RecipesContext> options) : base (options)
         {
-            var client = new MongoClient(settings.ConnectionString);
-            _database =  client.GetDatabase(settings.DatabaseName);
         }
-
-        public IMongoCollection<Ingredient> Ingredient
+        
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            get
-            {
-                return _database.GetCollection<Ingredient>("Ingredient");
-            }
-        }
+            base.OnModelCreating(modelBuilder);
 
-        public IMongoCollection<Recipe> Recipe
-        {
-            get
+            modelBuilder.Entity<RecipeIngredient>(recipeIngredient =>
             {
-                return _database.GetCollection<Recipe>("Recipes");
-            }
+                recipeIngredient.HasKey(x => new { x.RecipeId, x.IngredientId });
+            });
+
+            modelBuilder.Entity<RecipePlanning>(recipePlanning =>
+            {
+                recipePlanning.HasKey(x => new { x.RecipeId, x.PlanningId, x.MealId });
+            });
         }
     }
 }

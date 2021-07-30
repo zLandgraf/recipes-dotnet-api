@@ -1,8 +1,0 @@
-﻿namespace Recipes.Application.Ingredients.TransferObjects
-{
-    public class IngredientDTO
-    {
-        public string Id { get; set; }
-        public string Name { get; set; }
-    }
-}

@@ -1,4 +1,4 @@
-using MediatR;
+﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Recipes.Controllers
@@ -6,11 +6,11 @@ namespace Recipes.Controllers
     [ApiController]
     [Route("api/[controller]")]
     [Produces("application/json")]
-    public class RecipeController : ControllerBase
+    public class MealController
     {
         private readonly IMediator _mediatr;
 
-        public RecipeController(IMediator mediatr)
+        public MealController(IMediator mediatr)
             => _mediatr = mediatr;
     }
 }

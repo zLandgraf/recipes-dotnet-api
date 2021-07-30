@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,14 +27,6 @@ namespace Recipes.Application.Common
             var count = await source.CountAsync();
             var items = await source.Skip((currentPage - 1) * itemsPerPage).Take(itemsPerPage).ToListAsync();
             
-            return new PaginatedList<T>(items, count, currentPage, itemsPerPage);
-        }
-
-        public static async Task<PaginatedList<T>> CreateAsync(IFindFluent<T, T> source, int currentPage, int itemsPerPage)
-        {
-            var count = await source.CountDocumentsAsync();
-            var items = await source.Skip((currentPage - 1) * itemsPerPage).Limit(itemsPerPage).ToListAsync();
-
             return new PaginatedList<T>(items, count, currentPage, itemsPerPage);
         }
     }
